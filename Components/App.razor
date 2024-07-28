@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="blazorTextEditor.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet />
+</head>
+
+<body>
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
+    <script src="lib/tinymce/tinymce.min.js"></script>
+    <script>
+    window.InitEditor = (selector) => {
+
+        console.log("Inicializando editor " + selector)
+        tinymce.init({
+            selector: "#" + selector,
+            menubar: false,
+            toolbar: 'undo redo | bold italic underline | subscript superscript',
+            plugins: 'autoresize, paste',
+            height: 150,
+            minHeight: 150,
+            invalid_elements: "form, script, video, embed, style, meta, title",
+            paste_as_text: true,
+            entity_encoding: "raw",
+            setup: function (editor) {
+                editor.on('init', function () {
+                    editor.paste_as_text = true;
+                    editor.getBody().style.fontSize = '17px';
+                });
+                editor.on('change', function (e) {
+                    var element = document.getElementById(selector);
+                    element.value = editor.getContent();
+                    
+                    /*
+                        Atualiza o DOM para que o blazor encontre a modificação
+                    */
+                    var event = new Event('change');
+                    element.dispatchEvent(event);
+                });
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

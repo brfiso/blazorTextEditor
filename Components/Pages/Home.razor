@@ -1,0 +1,33 @@
+﻿@page "/"
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Posterize</PageTitle>
+
+<h1>Rich Text Editor</h1>
+<hr />
+<form @onsubmit="OnSubmit">
+    <BFeditor @bind-Text="Html" />
+    <div class="form-group my-3">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>
+
+@if (Html != null)
+{
+    <div class="my-3">
+        <h4>Resultado: </h4>
+        <div>@(new MarkupString(Html))</div>
+    </div>
+}
+
+
+@code {
+    public string? Html { get; set; }
+
+    public async Task OnSubmit()
+    {
+        // Html = Texto;
+    }
+
+}

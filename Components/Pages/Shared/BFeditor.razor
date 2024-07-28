@@ -1,0 +1,34 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<textarea id="@EditorId" @onchange="OnChanged">@Text</textarea>
+
+@code {
+    [Parameter]
+    public string? Text { get; set; }
+
+    [Parameter]
+    public EventCallback<string> TextChanged { get; set; }
+
+    private string EditorId { get; } = Guid.NewGuid().ToString().Replace("-", "");
+
+    private async Task OnChanged(ChangeEventArgs e)
+    {
+        Text = e?.Value?.ToString();
+        await TextChanged.InvokeAsync(Text);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            InitializeEditor();
+        }
+    }
+
+    private async void InitializeEditor()
+    {
+        await JSRuntime.InvokeVoidAsync("InitEditor", EditorId);
+    }
+}
